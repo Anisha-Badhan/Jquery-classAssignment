@@ -1,0 +1,78 @@
+<html>
+
+<head>
+	<title> Learning JSON and APIs </title>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+	<script>
+			let users = []
+			
+		$(document).ready(function (){
+				
+				axios.get("https://jsonplaceholder.typicode.com/posts")
+				.then(response => {
+					posts = response.data
+				})
+				axios.get("https://jsonplaceholder.typicode.com/users")
+					.then(response => {
+			
+				users = response.data 
+				
+				for(var i = 0; i < users.length; i++){
+				
+					var noOfPost = 0
+					
+					for(var j = 0; j < posts.length; j++)
+					{
+						if(posts[j].userId == users[i].id)
+						{
+							noOfPost++
+						}
+					}
+					
+						
+					$("#data-table").append(
+						`
+							<tr>
+								<td> <a target="_blank" href="profile.html?id=${users[i].id}">${users[i].name}</a></td>
+								<td>${users[i].email}</td>
+								<td>${noOfPost}</td>
+
+							</tr>
+						`
+					)
+
+				}
+		})
+	})
+	
+</script>
+</head>
+
+<body>
+
+	<h1> Playing with APIs </h1>
+	
+	
+		<table class="table">
+			<thead>
+			  <tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Total Posts</th>
+			  </tr>
+			</thead>
+			<tbody id="data-table">
+			 
+			 
+			</tbody>
+		</table>
+</body>
+
+</html>

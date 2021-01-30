@@ -1,0 +1,118 @@
+<html>
+
+<head>
+	<title> User Profile Page </title>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<style>
+		.card2{
+			margin-bottom: 5px;
+			background-color: #f7dae3;	
+		}
+		.container{
+			margin: 10px;
+		}
+		
+	</style>
+
+	<script>
+	
+		$(document).ready(function(){
+			let query = location.search
+			let param = new URLSearchParams(query)
+			let id = param.get("id")
+			
+			let user = {}
+			
+			axios.get("https://jsonplaceholder.typicode.com/comments")
+			.then(response => {
+				comments = response.data
+			})
+			
+			axios.get("https://jsonplaceholder.typicode.com/posts")
+			.then(response => {
+				posts = response.data
+			})
+			
+			axios.get(`https://jsonplaceholder.typicode.com/users/${id}`)
+			.then(response => {
+				
+				user = response.data
+				
+				$("#user_name").text(user.name)
+				
+				$("#user_details")
+				.text(`Address - ${user.address.suite},
+						${user.address.street},
+						${user.address.city} 
+					`)
+					
+					
+				
+				for(var j = 0; j < posts.length; j++)
+					{					
+					    let noOfComments = 0
+						if(posts[j].userId == user.id)
+						{
+							for(var i = 0; i < comments.length; i++)
+					{
+						
+							if(comments[i].postId == posts[j].id)
+							{
+								noOfComments++
+							}
+							
+						
+					}
+							$("#posts").append(`
+								<div class="col-lg-4" >
+								<div class="card2">
+									  <div class="card-header"><b>${posts[j].title}</b></div>
+									  <div class="card-body">${posts[j].body}</div>
+									  <div class="card-footer"><b>Comments: </b> ${noOfComments}</div>
+								</div>
+								</div>
+								
+							`)
+						}
+					}	
+			
+			
+			})
+			
+			
+		})
+		
+	</script>
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="card" style="width:400px">
+					<div class="card-body">
+					  <h4 class="card-title" id="user_name">Jane Doe</h4>
+					  <p class="card-text" id="user_details">Some example text some example text. Jane Doe is an architect and engineer</p>
+					</div>
+					<img class="card-img-bottom" src="https://www.w3schools.com/bootstrap4/img_avatar1.png" alt="Card image" style="width:100%">
+				</div>
+			</div>
+	<div class="container" >
+		<div class="row" id="posts">		
+			
+				
+		
+		</div>
+	</div>
+  
+	
+</body>
+
+</html>
